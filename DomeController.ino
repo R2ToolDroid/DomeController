@@ -151,7 +151,6 @@ int center() {
 
 void setup(){
   Serial.begin(9600);
-  delay(3000);
   Serial.print("DomeControl.ino  11.11.2018");
    
   delay(3000);
