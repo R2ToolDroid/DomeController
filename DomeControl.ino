@@ -1,5 +1,5 @@
 
-///Automatische Domebewegung
+///Automatische Domebewegung Steuerung
 ///
 ///Funktion über Schalter geht nur wenn RC aux nicht über 800
 ///Überschalter ist RC Mode Langsam ?
