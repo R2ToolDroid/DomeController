@@ -1,39 +1,42 @@
 
 ///Automatische Domebewegung Steuerung
 ///Doc Snyder Tool Droid DomeController
-///Funktion über Schalter geht nur wenn RC aux nicht über 800
-///Über Schalter ist noch im Konflikt mit RC Auswahl
+///Funktion über Schalter deaktiviert
+///für Arduino pro mini
+
+#include <SoftwareSerial.h>        // Durch diesen Include können wir die Funktionen 
+                                   // der SoftwareSerial Bibliothek nutzen.
+SoftwareSerial MainInput(14, 15); // Pin D10 ist RX, Pin D11 ist TX.
+                                   // Die Funktion softSerial() kann nun wie Serial() genutzt werden.
+                                   
 
 String data; //Consohlen Input
-String VERSION = "28-11-18";
+String VERSION = "19-12-18";
 
+byte debug = false;
 long randNumber;
 long zeit;
 long moving;
 
 ///Motor L298 Anschluss
-// Mini  6  5
-// Pro Micro 8 9
-int links = 8; //Pin 6
-int rechts = 9; //Pin 5
-int tempo = 255;
+int links = 6; //Pin 6
+int rechts = 5; //Pin 5
+int tempo = 200;
+int Rpos ;  //Zeit von Center to Zielposition in Millisec
 int durchlauf = 0;
 int sensorValue = 1500;
-int sensorCenter = 16;  // Sensor für Center Position
-int sensorMode = 10;    // Schalter am Board für Modus
-int sensorRC = 2;       // RC Steuerung
-int sensorRCaux = 14;   // Anschluss zum Schalten der Modi
-int RCaux = 0;
-boolean debug = false;
-int Mode = 0;// 0=RandMove // 1=RCMove
+int sensorCenter = 16;
+int sensorRC = 2;
+int Mode = 0;// 0=RandMove // 1=RCMove  //2=Service
 
-const int ledPin1 =  19;  
-const int ledPin2 =  18;  
+const int ledPin1 =  21;  
+const int ledPin2 =  20;  
 
 int ledState = LOW; 
 
 void setup(){
   Serial.begin(9600);
+  MainInput.begin(9600);
    // set the digital pin as output:
   pinMode(ledPin1, OUTPUT);
   pinMode(ledPin2, OUTPUT);
@@ -43,28 +46,18 @@ void setup(){
   // different seed numbers each time the sketch runs.
   // randomSeed() will then shuffle the random function.
   randomSeed(analogRead(0));
-  
+  Serial.println("DomeController_ Doc Tooldroide");
+  delay(2000);
+
+  Serial.println("DomeController_ Doc Tooldroide");
+  Serial.println("...ready for Command_");
+  startseq();
 }
 
 
 void loop() {
   
-  RCaux = pulseIn(sensorRCaux,HIGH);
   
-  if (RCaux >=800){
-    if (debug) {
-    Serial.print("RC AUX ");
-    Serial.println(RCaux);
-    }
-      if (RCaux >= 1200){
-      Mode = 0; 
-      }
-      if (RCaux <= 1200){
-      Mode = 1; 
-      }
-  }
- 
-
   if (Mode == 0){
      randomMove();
      durchlauf = durchlauf+1;
@@ -73,9 +66,7 @@ void loop() {
   if (Mode == 1  ){
      rcMove();
   }
-  
-  //Mode = digitalRead(sensorMode);    ///Schalteingang ist abgeschaltet
-  
+
   if (debug) {
       Serial.print("Mode= ");
       Serial.println(Mode);
@@ -92,6 +83,18 @@ void loop() {
         ProzessComando();
     }
   ///////////////////////
+  ////Prüfung 2///
+  MainInput.listen();
+  
+   if(MainInput.available() > 0)
+    {
+        data = MainInput.readStringUntil('\r');
+        
+        Serial.println(MainInput);
+        Serial.println(data);
+        ProzessComando();
+    }
+  ///////////////////////
     
 }
 
@@ -102,6 +105,20 @@ void ProzessComando() {
       {   
         Serial.println("test gefunden");
       }
+
+    if (data == "try dome"){
+        Serial.println("Testprogramm");
+     
+        for (int zaehler=1; zaehler<10; zaehler = zaehler+1){
+                digitalWrite(ledPin1, HIGH);
+                digitalWrite(ledPin2, HIGH);
+                delay(200);
+                digitalWrite(ledPin1, LOW);
+                digitalWrite(ledPin2, LOW);
+                delay(200);
+            }
+    }
+    
     
     if (data == "debug on")
       {
@@ -117,19 +134,97 @@ void ProzessComando() {
     if (data == "vers")   
       {
         Serial.println("----Versionnsnummer-----");
-        Serial.print(VERSION);
-        Serial.println("Komandoreferenz");
+        Serial.println(VERSION);
+        Serial.println("### Komandoreferenz ###");
         Serial.println("debug on");
         Serial.println("debug off");
+        Serial.println("test");
         Serial.println("vers");
-        
+        Serial.println("try dome");
+        Serial.println("mode1");
+        Serial.println("mode0");
+        Serial.println("usb");
+        Serial.println("tool1");
+        Serial.println("tool2");
+        Serial.println("nono");
+        Serial.println("yea");
+       
       }
-    delay(2000);
+
+    if (data == "mode1")
+      {
+        Serial.println("Mode = 1 RC");
+        Mode = 1;
+      }
+
+
+    if (data == "mode0")
+      {
+        Serial.println("Mode 0 Random");
+        Mode = 0;
+      }
+
+    if (data == "usb")
+      {
+        Serial.println("Rotation zu Position USB");
+        
+        rotate(800);    
+      }
+
+    if (data == "tool1")
+    {
+      Serial.println("Rotation zu Position tool1");
+        
+        rotate(1200); 
+    }
+    
+    if (data == "tool2")
+    {
+      Serial.println("Rotation zu Position tool2");
+       
+        rotate(1800); 
+    }
+    
+    if (data == "nono")
+    {
+      Serial.println("Rotation nono");
+       
+        rotate(2000); 
+        delay(100);
+        rotate(500);
+        
+    }
+    
+    if (data == "yea")
+    {
+      Serial.println("Rotation yea");
+       
+        rotate(3000); 
+        rotate(100);
+        
+    }
+      
+
+      
+      
+    //delay(2000);
     data = "";
     Serial.flush();
     
  
 }
+
+void rotate( int Rpos) {
+     center(); 
+     if (debug){Serial.println(Rpos);}
+     digitalWrite(ledPin2, HIGH);
+     analogWrite(links, tempo);  
+     delay(Rpos);
+     analogWrite(links, 0);  
+     digitalWrite(ledPin2, LOW);     
+}
+
+
 
 
 
@@ -140,26 +235,25 @@ int randomMove() {
   // print a random number from 10 to 19
   randNumber = random(10, 40);
   //Speed
-  tempo = random(100,160);
+  tempo = random(80,120);
   //Moving länge
   moving = random(500,1500);
  
-  if (randNumber < 20){
+  if (randNumber < 20){     ///Drehung Links
     if (debug){
     Serial.println("Links");
      Serial.println(randNumber);
     }
      // set the LED with the ledState of the variable:
      digitalWrite(ledPin2, HIGH);
-
-    //Drehung Links
+   
      analogWrite(links, tempo);  
-     analogWrite(rechts, 0); 
      delay(moving);
+     analogWrite(links, 0);  
      digitalWrite(ledPin2, LOW);
      delay(500);
     
-    } else if (randNumber > 20 && randNumber <= 30) {
+    } else if (randNumber > 20 && randNumber <= 30) {  ///Rechts Drehung
 
      if (debug) {
       Serial.println("rechts");
@@ -167,16 +261,19 @@ int randomMove() {
      }
      // set the LED with the ledState of the variable:
       digitalWrite(ledPin1, HIGH); 
-      analogWrite(links, 0);  
+      
       analogWrite(rechts, tempo); 
       delay(moving);      
       digitalWrite(ledPin1, LOW); 
+      analogWrite(rechts, 0); 
       delay(500);
       
     }  else {
       
       analogWrite(links, 0);  
       analogWrite(rechts, 0); 
+      digitalWrite(ledPin1, LOW); 
+      digitalWrite(ledPin2, LOW); 
       delay (zeit);
       
     }
@@ -187,6 +284,7 @@ int randomMove() {
       Serial.print("Druchlauf ");
       Serial.println(durchlauf);
   }
+  
 }
 
 
@@ -206,6 +304,7 @@ int rcMove() {
 
     //Drehung Links
      analogWrite(links, tempo);  
+     digitalWrite(ledPin2, HIGH); 
      analogWrite(rechts, 0); 
      
     
@@ -242,7 +341,7 @@ int center() {
     analogWrite(links, 0); 
  
    while ( digitalRead(sensorCenter) == 1){
-    analogWrite(rechts, 200); 
+    analogWrite(rechts, 120); 
     if (debug){Serial.println("try to get center");Serial.print(sensorCenter);}
     
     digitalWrite(ledPin1, HIGH); 
@@ -254,9 +353,22 @@ int center() {
    
    delay(1000);
    durchlauf = 0;
-   Mode = 0;
+   //Mode = 0;
    
    
 }
 
+void startseq() {
+
+    analogWrite(links, 100);  
+    delay(1000);
+    analogWrite(links, 0);
+
+    analogWrite(rechts, 100);
+    analogWrite(rechts, 0);
+     
+    center();
+
+
+}
 
