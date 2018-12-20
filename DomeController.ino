@@ -11,7 +11,7 @@ SoftwareSerial MainInput(14, 15); // Pin D10 ist RX, Pin D11 ist TX.
                                    
 
 String data; //Consohlen Input
-String VERSION = "19-12-18";
+String VERSION = "20-12-18";
 
 byte debug = false;
 long randNumber;
@@ -47,7 +47,7 @@ void setup(){
   // randomSeed() will then shuffle the random function.
   randomSeed(analogRead(0));
   Serial.println("DomeController_ Doc Tooldroide");
-  delay(2000);
+  delay(200);
 
   Serial.println("DomeController_ Doc Tooldroide");
   Serial.println("...ready for Command_");
@@ -148,6 +148,7 @@ void ProzessComando() {
         Serial.println("tool2");
         Serial.println("nono");
         Serial.println("yea");
+        Serial.println("dance");
        
       }
 
@@ -168,30 +169,30 @@ void ProzessComando() {
       {
         Serial.println("Rotation zu Position USB");
         
-        rotate(800);    
+        rotateR(800);    
       }
 
     if (data == "tool1")
     {
       Serial.println("Rotation zu Position tool1");
         
-        rotate(1200); 
+        rotateR(1200); 
     }
     
     if (data == "tool2")
     {
       Serial.println("Rotation zu Position tool2");
        
-        rotate(1800); 
+        rotateR(1800); 
     }
     
     if (data == "nono")
     {
       Serial.println("Rotation nono");
        
-        rotate(2000); 
+        rotateR(2000); 
         delay(100);
-        rotate(500);
+        rotateL(500);
         
     }
     
@@ -199,13 +200,15 @@ void ProzessComando() {
     {
       Serial.println("Rotation yea");
        
-        rotate(3000); 
-        rotate(100);
+        rotateR(3000); 
+        rotateL(100);
         
     }
-      
 
+    if (data =="dance") {
       
+    }
+   
       
     //delay(2000);
     data = "";
@@ -214,17 +217,28 @@ void ProzessComando() {
  
 }
 
-void rotate( int Rpos) {
+void rotateR( int Rpos) {
+     center(); 
+     if (debug){Serial.println(Rpos);}
+     digitalWrite(ledPin1, HIGH);
+     analogWrite(rechts, tempo);  
+     delay(Rpos);
+     analogWrite(rechts, 0);  
+     digitalWrite(ledPin1, LOW);     
+     delay(100);
+     
+}
+
+void rotateL( int Rpos) {
      center(); 
      if (debug){Serial.println(Rpos);}
      digitalWrite(ledPin2, HIGH);
      analogWrite(links, tempo);  
      delay(Rpos);
      analogWrite(links, 0);  
-     digitalWrite(ledPin2, LOW);     
+     digitalWrite(ledPin2, LOW);  
+     delay(100);   
 }
-
-
 
 
 
@@ -363,7 +377,6 @@ void startseq() {
     analogWrite(links, 100);  
     delay(1000);
     analogWrite(links, 0);
-
     analogWrite(rechts, 100);
     analogWrite(rechts, 0);
      
