@@ -146,6 +146,7 @@ void ProzessComando() {
         Serial.println("usb");
         Serial.println("tool1");
         Serial.println("tool2");
+        Serial.println("tool3");
         Serial.println("nono");
         Serial.println("yea");
         Serial.println("dance");
@@ -169,30 +170,37 @@ void ProzessComando() {
       {
         Serial.println("Rotation zu Position USB");
         
-        rotateR(800);    
+        rotateR(500);    
       }
 
     if (data == "tool1")
     {
       Serial.println("Rotation zu Position tool1");
         
-        rotateR(1200); 
+        rotateR(900); 
     }
     
     if (data == "tool2")
     {
       Serial.println("Rotation zu Position tool2");
        
-        rotateR(1800); 
+        rotateR(1300); 
     }
+
+    if (data == "tool3")
+    {
+      Serial.println("Rotation zu Position tool2");
+       
+        rotateR(3500); 
+    }  
+
+    
     
     if (data == "nono")
     {
       Serial.println("Rotation nono");
        
-        rotateR(2000); 
-        delay(100);
-        rotateL(500);
+        nono();
         
     }
     
@@ -218,10 +226,10 @@ void ProzessComando() {
 }
 
 void rotateR( int Rpos) {
-     center(); 
+     
      if (debug){Serial.println(Rpos);}
      digitalWrite(ledPin1, HIGH);
-     analogWrite(rechts, tempo);  
+     analogWrite(rechts, 160);  
      delay(Rpos);
      analogWrite(rechts, 0);  
      digitalWrite(ledPin1, LOW);     
@@ -230,15 +238,41 @@ void rotateR( int Rpos) {
 }
 
 void rotateL( int Rpos) {
-     center(); 
+     
      if (debug){Serial.println(Rpos);}
      digitalWrite(ledPin2, HIGH);
-     analogWrite(links, tempo);  
+     analogWrite(links, 160);  
      delay(Rpos);
      analogWrite(links, 0);  
      digitalWrite(ledPin2, LOW);  
      delay(100);   
 }
+
+
+void nono() {
+      center(); 
+     if (debug){Serial.println(Rpos);}
+     digitalWrite(ledPin2, HIGH);
+     analogWrite(links, 150);  
+     delay(500);
+     analogWrite(links, 0);  
+     digitalWrite(ledPin2, LOW);  
+     digitalWrite(ledPin1, HIGH);
+     analogWrite(rechts, 150);  
+     delay(500);
+     analogWrite(rechts, 0);  
+     digitalWrite(ledPin1, LOW);  
+     digitalWrite(ledPin2, HIGH);
+     analogWrite(links, 150);  
+     delay(500);
+     analogWrite(links, 0);  
+     digitalWrite(ledPin2, LOW);  
+ 
+     delay(100);  
+
+  
+}
+
 
 
 
