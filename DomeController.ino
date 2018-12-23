@@ -150,7 +150,7 @@ void ProzessComando() {
         Serial.println("nono");
         Serial.println("yea");
         Serial.println("dance");
-       
+        Serial.println("center");
       }
 
     if (data == "mode1")
@@ -170,28 +170,28 @@ void ProzessComando() {
       {
         Serial.println("Rotation zu Position USB");
         
-        rotateR(500);    
+        rotateR(600);    
       }
 
     if (data == "tool1")
     {
       Serial.println("Rotation zu Position tool1");
         
-        rotateR(900); 
+        rotateR(1000); 
     }
     
     if (data == "tool2")
     {
       Serial.println("Rotation zu Position tool2");
        
-        rotateR(1300); 
+        rotateR(1400); 
     }
 
     if (data == "tool3")
     {
       Serial.println("Rotation zu Position tool2");
        
-        rotateR(3500); 
+        rotateR(4000); 
     }  
 
     
@@ -208,7 +208,7 @@ void ProzessComando() {
     {
       Serial.println("Rotation yea");
        
-        rotateR(3000); 
+        rotateR(2000); 
         rotateL(100);
         
     }
@@ -216,6 +216,11 @@ void ProzessComando() {
     if (data =="dance") {
       
     }
+
+    if (data =="center") {
+      center();
+    }
+    
    
       
     //delay(2000);
@@ -254,18 +259,20 @@ void nono() {
      if (debug){Serial.println(Rpos);}
      digitalWrite(ledPin2, HIGH);
      analogWrite(links, 150);  
-     delay(500);
-     analogWrite(links, 0);  
+     analogWrite(links, 0); 
+     delay(500); 
      digitalWrite(ledPin2, LOW);  
      digitalWrite(ledPin1, HIGH);
      analogWrite(rechts, 150);  
-     delay(500);
-     analogWrite(rechts, 0);  
+     
+     analogWrite(rechts, 0); 
+     delay(500); 
      digitalWrite(ledPin1, LOW);  
      digitalWrite(ledPin2, HIGH);
      analogWrite(links, 150);  
-     delay(500);
+     
      analogWrite(links, 0);  
+     delay(500);
      digitalWrite(ledPin2, LOW);  
  
      delay(100);  
@@ -340,9 +347,13 @@ int randomMove() {
 int rcMove() {
 
     int sensorValue = pulseIn(sensorRC,HIGH);
+    
+    if (sensorValue >=800){ ///Check if Sensor is Connectet an RC on
+
+    
     if (sensorValue < 1400){
-      if (debug){
-          Serial.println("Links");
+      if (debug){ 
+        Serial.println("Links");
       }
           // set the LED with the ledState of the variable:
      digitalWrite(ledPin2, HIGH);
@@ -350,10 +361,11 @@ int rcMove() {
      tempo = tempo *-1; 
      tempo = tempo +500;
 
-    //Drehung Links
-     analogWrite(links, tempo);  
-     digitalWrite(ledPin2, HIGH); 
-     analogWrite(rechts, 0); 
+    //Drehung Rechts
+      
+     digitalWrite(ledPin1, HIGH); 
+     analogWrite(links, 0); 
+     analogWrite(rechts, tempo); 
      
     
     } else if (sensorValue > 1500) {
@@ -365,8 +377,8 @@ int rcMove() {
       tempo = sensorValue /4;
       //tempo = tempo /5;
       
-      analogWrite(links, 0);  
-      analogWrite(rechts, tempo); 
+      analogWrite(rechts, 0);  
+      analogWrite(links, tempo); 
      
     }  else {
       analogWrite(links, 0);  
@@ -377,6 +389,9 @@ int rcMove() {
       //delay (zeit);
       
     }
+
+    }///End Sensor Check
+    
   if (debug) { Serial.print("Value ");Serial.println(tempo);}
   
 }
@@ -389,7 +404,7 @@ int center() {
     analogWrite(links, 0); 
  
    while ( digitalRead(sensorCenter) == 1){
-    analogWrite(rechts, 120); 
+    analogWrite(links, 130); 
     if (debug){Serial.println("try to get center");Serial.print(sensorCenter);}
     
     digitalWrite(ledPin1, HIGH); 
@@ -397,9 +412,9 @@ int center() {
     
    }
    digitalWrite(ledPin1, LOW); 
-   analogWrite(rechts, 0);  
+   analogWrite(links, 0);  
    
-   delay(1000);
+   delay(200);
    durchlauf = 0;
    //Mode = 0;
    
@@ -408,11 +423,12 @@ int center() {
 
 void startseq() {
 
-    analogWrite(links, 100);  
-    delay(1000);
-    analogWrite(links, 0);
+    
     analogWrite(rechts, 100);
     analogWrite(rechts, 0);
+    delay(500);
+    analogWrite(links, 100);  
+    analogWrite(links, 0);
      
     center();
 
