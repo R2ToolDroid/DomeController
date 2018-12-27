@@ -47,7 +47,7 @@ void setup(){
   // randomSeed() will then shuffle the random function.
   randomSeed(analogRead(0));
   Serial.println("DomeController_ Doc Tooldroide");
-  delay(200);
+  delay(2000);
 
   Serial.println("DomeController_ Doc Tooldroide");
   Serial.println("...ready for Command_");
@@ -189,7 +189,7 @@ void ProzessComando() {
 
     if (data == "tool3")
     {
-      Serial.println("Rotation zu Position tool2");
+      Serial.println("Rotation zu Position tool3");
        
         rotateR(4000); 
     }  
