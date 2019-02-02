@@ -29,6 +29,8 @@ int sensorCenter = 16;
 int sensorRC = 2;
 int Mode = 0;// 0=RandMove // 1=RCMove  //2=Service
 
+int centerState = 0;
+
 const int ledPin1 =  21;  
 const int ledPin2 =  20;  
 
@@ -72,7 +74,7 @@ void loop() {
       Serial.println(Mode);
   }
 
-  if (durchlauf == 10) {
+  if (durchlauf == 10 ) {
     center();
   }
 
@@ -398,19 +400,30 @@ int rcMove() {
 
 int center() {
     /// Fuert den Dome in die Ausgangsposition //
-   if (debug) { Serial.print("CenterMode ");}
+
+    centerState = digitalRead(sensorCenter);
+    
+   if (debug) { 
+    
+    Serial.print("CenterMode ");
+    Serial.println(centerState);
+   
+   }
 
     analogWrite(rechts, 0); 
     analogWrite(links, 0); 
+
+      
+      while ( digitalRead(sensorCenter) == 1){
+                analogWrite(links, 130); 
+                if (debug){Serial.println("try to get center");Serial.print(sensorCenter);}
+    
+            digitalWrite(ledPin1, HIGH); 
  
-   while ( digitalRead(sensorCenter) == 1){
-    analogWrite(links, 130); 
-    if (debug){Serial.println("try to get center");Serial.print(sensorCenter);}
-    
-    digitalWrite(ledPin1, HIGH); 
-    
-    
-   }
+      }
+  
+
+   
    digitalWrite(ledPin1, LOW); 
    analogWrite(links, 0);  
    
@@ -423,6 +436,7 @@ int center() {
 
 void startseq() {
 
+    delay(4000);
     
     analogWrite(rechts, 100);
     analogWrite(rechts, 0);
