@@ -291,7 +291,7 @@ int randomMove() {
   // print a random number from 10 to 19
   randNumber = random(10, 40);
   //Speed
-  tempo = random(170,250);
+  tempo = random(170,220);
   //Moving länge
   moving = random(500,1500);
  
@@ -437,14 +437,11 @@ void startseq() {
 
     delay(4000);
 
-    analogWrite(links, 200);  
-    analogWrite(links, 0);
-    
-    delay(500);
-    analogWrite(rechts, 200);
+    analogWrite(rechts, 100);
     analogWrite(rechts, 0);
      
     center();
 
+    delay(2000);
 
 }
