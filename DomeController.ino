@@ -1,4 +1,3 @@
-
 ///Automatische Domebewegung Steuerung
 ///Doc Snyder Tool Droid DomeController
 ///Funktion über Schalter deaktiviert
@@ -21,7 +20,7 @@ long moving;
 ///Motor L298 Anschluss
 int links = 6; //Pin 6
 int rechts = 5; //Pin 5
-int tempo = 200;
+int tempo = 250;
 int Rpos ;  //Zeit von Center to Zielposition in Millisec
 int durchlauf = 0;
 int sensorValue = 1500;
@@ -172,21 +171,21 @@ void ProzessComando() {
       {
         Serial.println("Rotation zu Position USB");
         
-        rotateR(600);    
+        rotateR(800);    
       }
 
     if (data == "tool1")
     {
       Serial.println("Rotation zu Position tool1");
         
-        rotateR(1000); 
+        rotateR(1200); 
     }
     
     if (data == "tool2")
     {
       Serial.println("Rotation zu Position tool2");
        
-        rotateR(1400); 
+        rotateR(1600); 
     }
 
     if (data == "tool3")
@@ -236,7 +235,7 @@ void rotateR( int Rpos) {
      
      if (debug){Serial.println(Rpos);}
      digitalWrite(ledPin1, HIGH);
-     analogWrite(rechts, 160);  
+     analogWrite(rechts, 200);  
      delay(Rpos);
      analogWrite(rechts, 0);  
      digitalWrite(ledPin1, LOW);     
@@ -248,7 +247,7 @@ void rotateL( int Rpos) {
      
      if (debug){Serial.println(Rpos);}
      digitalWrite(ledPin2, HIGH);
-     analogWrite(links, 160);  
+     analogWrite(links, 200);  
      delay(Rpos);
      analogWrite(links, 0);  
      digitalWrite(ledPin2, LOW);  
@@ -260,18 +259,18 @@ void nono() {
       center(); 
      if (debug){Serial.println(Rpos);}
      digitalWrite(ledPin2, HIGH);
-     analogWrite(links, 150);  
+     analogWrite(links, 200);  
      analogWrite(links, 0); 
      delay(500); 
      digitalWrite(ledPin2, LOW);  
      digitalWrite(ledPin1, HIGH);
-     analogWrite(rechts, 150);  
+     analogWrite(rechts, 200);  
      
      analogWrite(rechts, 0); 
      delay(500); 
      digitalWrite(ledPin1, LOW);  
      digitalWrite(ledPin2, HIGH);
-     analogWrite(links, 150);  
+     analogWrite(links, 200);  
      
      analogWrite(links, 0);  
      delay(500);
@@ -292,7 +291,7 @@ int randomMove() {
   // print a random number from 10 to 19
   randNumber = random(10, 40);
   //Speed
-  tempo = random(80,120);
+  tempo = random(170,250);
   //Moving länge
   moving = random(500,1500);
  
@@ -415,7 +414,7 @@ int center() {
 
       
       while ( digitalRead(sensorCenter) == 1){
-                analogWrite(links, 130); 
+                analogWrite(links, 200); 
                 if (debug){Serial.println("try to get center");Serial.print(sensorCenter);}
     
             digitalWrite(ledPin1, HIGH); 
@@ -437,15 +436,15 @@ int center() {
 void startseq() {
 
     delay(4000);
-    
-    analogWrite(rechts, 100);
-    analogWrite(rechts, 0);
-    delay(500);
-    analogWrite(links, 100);  
+
+    analogWrite(links, 200);  
     analogWrite(links, 0);
+    
+    delay(500);
+    analogWrite(rechts, 200);
+    analogWrite(rechts, 0);
      
     center();
 
 
 }
-
