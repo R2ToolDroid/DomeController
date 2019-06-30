@@ -2,6 +2,7 @@
 ///Doc Snyder Tool Droid DomeController
 ///Funktion über Schalter deaktiviert
 ///für Arduino pro mini
+///
 
 #include <SoftwareSerial.h>        // Durch diesen Include können wir die Funktionen 
                                    // der SoftwareSerial Bibliothek nutzen.
@@ -10,23 +11,25 @@ SoftwareSerial MainInput(14, 15); // Pin D10 ist RX, Pin D11 ist TX.
                                    
 
 String data; //Consohlen Input
-String VERSION = "20-12-18";
+String VERSION = "20-06-19-WIN7";
 
 byte debug = false;
 long randNumber;
 long zeit;
 long moving;
+int rotime;
+unsigned long zeit1, zeit2;
 
 ///Motor L298 Anschluss
 int links = 6; //Pin 6
 int rechts = 5; //Pin 5
 int tempo = 250;
-int Rpos ;  //Zeit von Center to Zielposition in Millisec
+unsigned long Rpos ;  //Zeit von Center to Zielposition in Millisec
 int durchlauf = 0;
 int sensorValue = 1500;
 int sensorCenter = 16;
 int sensorRC = 2;
-int Mode = 0;// 0=RandMove // 1=RCMove  //2=Service
+int Mode = 2;// 0=RandMove // 1=RCMove  //2=Service
 
 int centerState = 0;
 
@@ -52,8 +55,42 @@ void setup(){
 
   Serial.println("DomeController_ Doc Tooldroide");
   Serial.println("...ready for Command_");
-  startseq();
+  //startseq();
+  FindRoTime();
+  
 }
+
+
+void FindRoTime(){
+
+    //int rotime;
+    center("L");
+    Serial.println("Dome ist Center");
+    delay(1000);
+    zeit1 = millis();
+    center("L");
+    zeit2 = millis();
+    
+    Serial.print("Zeit1_");
+    Serial.println(zeit1);
+    Serial.print("Zeit2_"); 
+    Serial.println(zeit2); 
+
+    rotime = zeit2-zeit1;
+
+    Serial.print("rotime_"); 
+    Serial.println(rotime);
+
+    Rpos = rotime/360; ///Rpos ist dann Winkel in Zeit Variable  90° also SUM*90;
+    center("R");
+    
+     Serial.print("Rpos_"); 
+    Serial.println(Rpos);
+}
+
+
+
+
 
 
 void loop() {
@@ -63,6 +100,12 @@ void loop() {
      randomMove();
      durchlauf = durchlauf+1;
   }
+
+  if (Mode == 3){
+     randomMove2();
+     //durchlauf = durchlauf+1;
+  }
+
 
   if (Mode == 1  ){
      rcMove();
@@ -74,7 +117,7 @@ void loop() {
   }
 
   if (durchlauf == 10 ) {
-    center();
+    center("L");
   }
 
   ///Comando Pruefung////
@@ -105,19 +148,15 @@ void ProzessComando() {
     if (data == "test" )
       {   
         Serial.println("test gefunden");
+        FindRoTime();
+
+        
       }
 
     if (data == "try dome"){
         Serial.println("Testprogramm");
      
-        for (int zaehler=1; zaehler<10; zaehler = zaehler+1){
-                digitalWrite(ledPin1, HIGH);
-                digitalWrite(ledPin2, HIGH);
-                delay(200);
-                digitalWrite(ledPin1, LOW);
-                digitalWrite(ledPin2, LOW);
-                delay(200);
-            }
+        rotateR(Rpos*180); 
     }
     
     
@@ -167,25 +206,32 @@ void ProzessComando() {
         Mode = 0;
       }
 
+     if (data == "mode3")
+      {
+        Serial.println("Mode 0 Random");
+        Mode = 3;
+      }
+ 
+
     if (data == "usb")
       {
         Serial.println("Rotation zu Position USB");
-        
-        rotateR(800);    
+       
+        rotateR(Rpos*80);    
       }
 
     if (data == "tool1")
     {
       Serial.println("Rotation zu Position tool1");
         
-        rotateR(1200); 
+        rotateR(Rpos*110); 
     }
     
     if (data == "tool2")
     {
       Serial.println("Rotation zu Position tool2");
-       
-        rotateR(1600); 
+        
+        rotateR(Rpos*140); 
     }
 
     if (data == "tool3")
@@ -208,6 +254,7 @@ void ProzessComando() {
     if (data == "yea")
     {
       Serial.println("Rotation yea");
+
        
         rotateR(2000); 
         rotateL(100);
@@ -219,10 +266,11 @@ void ProzessComando() {
     }
 
     if (data =="center") {
-      center();
+      
+      center("L");
     }
+
     
-   
       
     //delay(2000);
     data = "";
@@ -256,25 +304,9 @@ void rotateL( int Rpos) {
 
 
 void nono() {
-      center(); 
-     if (debug){Serial.println(Rpos);}
-     digitalWrite(ledPin2, HIGH);
-     analogWrite(links, 200);  
-     analogWrite(links, 0); 
-     delay(500); 
-     digitalWrite(ledPin2, LOW);  
-     digitalWrite(ledPin1, HIGH);
-     analogWrite(rechts, 200);  
-     
-     analogWrite(rechts, 0); 
-     delay(500); 
-     digitalWrite(ledPin1, LOW);  
-     digitalWrite(ledPin2, HIGH);
-     analogWrite(links, 200);  
-     
-     analogWrite(links, 0);  
-     delay(500);
-     digitalWrite(ledPin2, LOW);  
+      center("L"); 
+     center("R");
+     center("L");
  
      delay(100);  
 
@@ -291,7 +323,66 @@ int randomMove() {
   // print a random number from 10 to 19
   randNumber = random(10, 40);
   //Speed
-  tempo = random(170,220);
+  tempo = random(160,200);
+  //Moving länge
+  moving = random(500,1500);
+ 
+  if (randNumber < 20){     ///Drehung Links
+    if (debug){
+    Serial.println("Links");
+     Serial.println(randNumber);
+    }
+     // set the LED with the ledState of the variable:
+     digitalWrite(ledPin2, HIGH);
+   
+     analogWrite(links, tempo);  
+     delay(moving);
+     analogWrite(links, 0);  
+     digitalWrite(ledPin2, LOW);
+     delay(500);
+    
+    } else if (randNumber > 20 && randNumber <= 30) {  ///Rechts Drehung
+
+     if (debug) {
+      Serial.println("rechts");
+      Serial.println(randNumber);
+     }
+     // set the LED with the ledState of the variable:
+      digitalWrite(ledPin1, HIGH); 
+      
+      analogWrite(rechts, tempo); 
+      delay(moving);      
+      digitalWrite(ledPin1, LOW); 
+      analogWrite(rechts, 0); 
+      delay(500);
+      
+    }  else {
+      
+      analogWrite(links, 0);  
+      analogWrite(rechts, 0); 
+      digitalWrite(ledPin1, LOW); 
+      digitalWrite(ledPin2, LOW); 
+      delay (zeit);
+      
+    }
+
+  if (debug) {
+      Serial.print("Zeit ");
+      Serial.println(zeit);
+      Serial.print("Druchlauf ");
+      Serial.println(durchlauf);
+  }
+  
+}
+
+int randomMove2() {
+ 
+   // print a random number from 0 to 299
+  zeit = random(5000, 8000);
+  // print a random number from 10 to 19
+  randNumber = random(10, 40);
+  //Speed
+  tempo = random(100,150);
   //Moving länge
   moving = random(500,1500);
  
@@ -345,6 +436,10 @@ int randomMove() {
 
 
 
+
+
+
+
 int rcMove() {
 
     int sensorValue = pulseIn(sensorRC,HIGH);
@@ -352,7 +447,7 @@ int rcMove() {
     if (sensorValue >=800){ ///Check if Sensor is Connectet an RC on
 
     
-    if (sensorValue < 1400){
+    if (sensorValue < 1250){
       if (debug){ 
         Serial.println("Links");
       }
@@ -369,7 +464,7 @@ int rcMove() {
      analogWrite(rechts, tempo); 
      
     
-    } else if (sensorValue > 1500) {
+    } else if (sensorValue > 1650) {
       if (debug) {
       Serial.println("rechts");
       }     
@@ -393,11 +488,15 @@ int rcMove() {
 
     }///End Sensor Check
     
-  if (debug) { Serial.print("Value ");Serial.println(tempo);}
+  if (debug) { 
+    
+    Serial.print("Tempo ");Serial.println(tempo);
+    Serial.print("Value ");Serial.println(sensorValue);
+    }
   
 }
 
-int center() {
+int center(String dir) {
     /// Fuert den Dome in die Ausgangsposition //
 
     centerState = digitalRead(sensorCenter);
@@ -414,7 +513,16 @@ int center() {
 
       
       while ( digitalRead(sensorCenter) == 1){
-                analogWrite(links, 200); 
+                
+                if (dir == "L" ) {
+                  analogWrite(links, 200); 
+                   
+                } 
+                
+                if (dir == "R") {
+                  analogWrite(rechts, 200); 
+                }
+                
                 if (debug){Serial.println("try to get center");Serial.print(sensorCenter);}
     
             digitalWrite(ledPin1, HIGH); 
@@ -425,6 +533,7 @@ int center() {
    
    digitalWrite(ledPin1, LOW); 
    analogWrite(links, 0);  
+    analogWrite(rechts, 0);  
    
    delay(200);
    durchlauf = 0;
@@ -440,7 +549,7 @@ void startseq() {
     analogWrite(rechts, 100);
     analogWrite(rechts, 0);
      
-    center();
+    center("L");
 
     delay(2000);
 
