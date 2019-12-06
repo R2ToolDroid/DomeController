@@ -37,7 +37,7 @@ int ledPin2 =  20;
 
 int ledState = LOW; 
 
-int center(String dir) {
+void center(String dir) {
     /// Fuert den Dome in die Ausgangsposition //
 
     centerState = digitalRead(sensorCenter);
@@ -80,7 +80,7 @@ int center(String dir) {
    durchlauf = 0;
    //Mode = 0;
    
-   return;
+   
 }
 
 void rotateR( int Rpos) {
@@ -92,7 +92,7 @@ void rotateR( int Rpos) {
      analogWrite(rechts, 0);  
      digitalWrite(ledPin1, LOW);     
      delay(100);
-     return;
+     
 }
 
 void rotateL( int Rpos) {
@@ -104,7 +104,7 @@ void rotateL( int Rpos) {
      analogWrite(links, 0);  
      digitalWrite(ledPin2, LOW);  
      delay(100);   
-    return;
+    
 }
 
 
@@ -114,14 +114,14 @@ void nono() {
      center("L");
  
      delay(100);  
-    return;
+    
   
 }
 
 
 
 
-int randomMove() {
+void randomMove() {
  
    // print a random number from 0 to 299
   zeit = random(2000, 6000);
@@ -178,10 +178,10 @@ int randomMove() {
       Serial.println(durchlauf);
   }
   
-  return;
+  
 }
 
-int randomMove2() {
+void randomMove2() {
  
    // print a random number from 0 to 299
   zeit = random(5000, 8000);
@@ -237,11 +237,11 @@ int randomMove2() {
       Serial.print("Druchlauf ");
       Serial.println(durchlauf);
   }
-  return;
+  
 }
 
 
-int rcMove() {
+void rcMove() {
 
     int sensorValue = pulseIn(sensorRC,HIGH);
     
@@ -294,7 +294,7 @@ int rcMove() {
     Serial.print("Tempo ");Serial.println(tempo);
     Serial.print("Value ");Serial.println(sensorValue);
     }
-  return;
+  
 }
 
 
@@ -325,7 +325,7 @@ void FindRoTime(){
     
      Serial.print("Rpos_"); 
     Serial.println(Rpos);
-  return;
+  
 }
 
 ////
@@ -489,7 +489,7 @@ void ProzessComando() {
     //delay(2000);
     data = "";
     Serial.flush();
-    return;
+    
  
 }
 
@@ -505,7 +505,7 @@ void startseq() {
     center("L");
 
     delay(2000);
-    return;
+    
 }
 
 void loop() {
@@ -554,5 +554,5 @@ void loop() {
         ProzessComando();
     }
   ///////////////////////
-    return;
+    
 }
