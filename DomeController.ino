@@ -38,32 +38,6 @@ const int ledPin2 =  20;
 int ledState = LOW; 
 
 
-void FindRoTime(){
-
-    //int rotime;
-    center("L");
-    Serial.println("Dome ist Center");
-    delay(1000);
-    zeit1 = millis();
-    center("L");
-    zeit2 = millis();
-    
-    Serial.print("Zeit1_");
-    Serial.println(zeit1);
-    Serial.print("Zeit2_"); 
-    Serial.println(zeit2); 
-
-    rotime = zeit2-zeit1;
-
-    Serial.print("rotime_"); 
-    Serial.println(rotime);
-
-    Rpos = rotime/360; ///Rpos ist dann Winkel in Zeit Variable  90° also SUM*90;
-    center("R");
-    
-     Serial.print("Rpos_"); 
-    Serial.println(Rpos);
-}
 
 
 
@@ -489,6 +463,37 @@ int center(String dir) {
    
    
 }
+
+
+void FindRoTime(){
+
+    //int rotime;
+    center("L");
+    Serial.println("Dome ist Center");
+    delay(1000);
+    zeit1 = millis();
+    center("L");
+    zeit2 = millis();
+    
+    Serial.print("Zeit1_");
+    Serial.println(zeit1);
+    Serial.print("Zeit2_"); 
+    Serial.println(zeit2); 
+
+    rotime = zeit2-zeit1;
+
+    Serial.print("rotime_"); 
+    Serial.println(rotime);
+
+    Rpos = rotime/360; ///Rpos ist dann Winkel in Zeit Variable  90° also SUM*90;
+    center("R");
+    
+     Serial.print("Rpos_"); 
+    Serial.println(Rpos);
+}
+
+
+
 
 void startseq() {
 
