@@ -7,8 +7,7 @@
 #include <SoftwareSerial.h>        // Durch diesen Include können wir die Funktionen 
                                    // der SoftwareSerial Bibliothek nutzen.
 SoftwareSerial MainInput(14, 15); // Pin D10 ist RX, Pin D11 ist TX.
-                                   // Die Funktion softSerial() kann nun wie Serial() genutzt werden.
-                                   
+                                   // Die Funktion softSerial() kann nun wie Serial() genutzt werden.                             
 
 String data; //Consohlen Input
 String VERSION = "06-12-19-RPI";
@@ -39,31 +38,6 @@ const int ledPin2 =  20;
 int ledState = LOW; 
 
 
-////
-void setup(){
-  Serial.begin(9600);
-  MainInput.begin(9600);
-   // set the digital pin as output:
-  pinMode(ledPin1, OUTPUT);
-  pinMode(ledPin2, OUTPUT);
- 
-  // if analog input pin 0 is unconnected, random analog
-  // noise will cause the call to randomSeed() to generateB
-  // different seed numbers each time the sketch runs.
-  // randomSeed() will then shuffle the random function.
-  randomSeed(analogRead(0));
-  Serial.println("DomeController_ Doc Tooldroide");
-  delay(2000);
-
-  Serial.println("DomeController_ Doc Tooldroide");
-  Serial.println("...ready for Command_");
-  //startseq();
-  FindRoTime();
-  
-}
-
-
-
 void FindRoTime(){
 
     //int rotime;
@@ -90,19 +64,6 @@ void FindRoTime(){
      Serial.print("Rpos_"); 
     Serial.println(Rpos);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -395,6 +356,29 @@ int randomMove2() {
       Serial.print("Druchlauf ");
       Serial.println(durchlauf);
   }
+  
+}
+
+////
+void setup(){
+  Serial.begin(9600);
+  MainInput.begin(9600);
+   // set the digital pin as output:
+  pinMode(ledPin1, OUTPUT);
+  pinMode(ledPin2, OUTPUT);
+ 
+  // if analog input pin 0 is unconnected, random analog
+  // noise will cause the call to randomSeed() to generateB
+  // different seed numbers each time the sketch runs.
+  // randomSeed() will then shuffle the random function.
+  randomSeed(analogRead(0));
+  Serial.println("DomeController_ Doc Tooldroide");
+  delay(2000);
+
+  Serial.println("DomeController_ Doc Tooldroide");
+  Serial.println("...ready for Command_");
+  //startseq();
+  FindRoTime();
   
 }
 
