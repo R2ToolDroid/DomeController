@@ -11,7 +11,7 @@ SoftwareSerial MainInput(14, 15); // Pin D10 ist RX, Pin D11 ist TX.
                                    
 
 String data; //Consohlen Input
-String VERSION = "20-06-19-WIN7";
+String VERSION = "06-12-19-RPI";
 
 byte debug = false;
 long randNumber;
@@ -38,6 +38,8 @@ const int ledPin2 =  20;
 
 int ledState = LOW; 
 
+
+////
 void setup(){
   Serial.begin(9600);
   MainInput.begin(9600);
@@ -59,6 +61,7 @@ void setup(){
   FindRoTime();
   
 }
+
 
 
 void FindRoTime(){
@@ -93,54 +96,15 @@ void FindRoTime(){
 
 
 
-void loop() {
-  
-  
-  if (Mode == 0){
-     randomMove();
-     durchlauf = durchlauf+1;
-  }
-
-  if (Mode == 3){
-     randomMove2();
-     //durchlauf = durchlauf+1;
-  }
 
 
-  if (Mode == 1  ){
-     rcMove();
-  }
 
-  if (debug) {
-      Serial.print("Mode= ");
-      Serial.println(Mode);
-  }
 
-  if (durchlauf == 10 ) {
-    center("L");
-  }
 
-  ///Comando Pruefung////
-   if(Serial.available() > 0)
-    {
-        data = Serial.readStringUntil('\n');
-        ProzessComando();
-    }
-  ///////////////////////
-  ////Prüfung 2///
-  MainInput.listen();
-  
-   if(MainInput.available() > 0)
-    {
-        data = MainInput.readStringUntil('\r');
-        
-        Serial.println(MainInput);
-        Serial.println(data);
-        ProzessComando();
-    }
-  ///////////////////////
-    
-}
+
+
+
+
 
 
 void ProzessComando() {
@@ -553,4 +517,53 @@ void startseq() {
 
     delay(2000);
 
+}
+
+void loop() {
+  
+  
+  if (Mode == 0){
+     randomMove();
+     durchlauf = durchlauf+1;
+  }
+
+  if (Mode == 3){
+     randomMove2();
+     //durchlauf = durchlauf+1;
+  }
+
+
+  if (Mode == 1  ){
+     rcMove();
+  }
+
+  if (debug) {
+      Serial.print("Mode= ");
+      Serial.println(Mode);
+  }
+
+  if (durchlauf == 10 ) {
+    center("L");
+  }
+
+  ///Comando Pruefung////
+   if(Serial.available() > 0)
+    {
+        data = Serial.readStringUntil('\n');
+        ProzessComando();
+    }
+  ///////////////////////
+  ////Prüfung 2///
+  MainInput.listen();
+  
+   if(MainInput.available() > 0)
+    {
+        data = MainInput.readStringUntil('\r');
+        
+        Serial.println(MainInput);
+        Serial.println(data);
+        ProzessComando();
+    }
+  ///////////////////////
+    
 }
