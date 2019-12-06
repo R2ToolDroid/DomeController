@@ -80,7 +80,7 @@ int center(String dir) {
    durchlauf = 0;
    //Mode = 0;
    
-   
+   return;
 }
 
 void rotateR( int Rpos) {
@@ -92,7 +92,7 @@ void rotateR( int Rpos) {
      analogWrite(rechts, 0);  
      digitalWrite(ledPin1, LOW);     
      delay(100);
-     
+     return;
 }
 
 void rotateL( int Rpos) {
@@ -104,6 +104,7 @@ void rotateL( int Rpos) {
      analogWrite(links, 0);  
      digitalWrite(ledPin2, LOW);  
      delay(100);   
+    return;
 }
 
 
@@ -113,7 +114,7 @@ void nono() {
      center("L");
  
      delay(100);  
-
+    return;
   
 }
 
@@ -177,6 +178,7 @@ int randomMove() {
       Serial.println(durchlauf);
   }
   
+  return;
 }
 
 int randomMove2() {
@@ -235,7 +237,7 @@ int randomMove2() {
       Serial.print("Druchlauf ");
       Serial.println(durchlauf);
   }
-  
+  return;
 }
 
 
@@ -292,7 +294,7 @@ int rcMove() {
     Serial.print("Tempo ");Serial.println(tempo);
     Serial.print("Value ");Serial.println(sensorValue);
     }
-  
+  return;
 }
 
 
@@ -323,6 +325,7 @@ void FindRoTime(){
     
      Serial.print("Rpos_"); 
     Serial.println(Rpos);
+  return;
 }
 
 ////
@@ -486,7 +489,7 @@ void ProzessComando() {
     //delay(2000);
     data = "";
     Serial.flush();
-    
+    return;
  
 }
 
@@ -502,7 +505,7 @@ void startseq() {
     center("L");
 
     delay(2000);
-
+    return;
 }
 
 void loop() {
@@ -546,10 +549,10 @@ void loop() {
     {
         data = MainInput.readStringUntil('\r');
         
-        Serial.println(MainInput);
+        Serial.println("MainInput");
         Serial.println(data);
         ProzessComando();
     }
   ///////////////////////
-    
+    return;
 }
