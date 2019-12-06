@@ -37,7 +37,51 @@ int ledPin2 =  20;
 
 int ledState = LOW; 
 
+int center(String dir) {
+    /// Fuert den Dome in die Ausgangsposition //
 
+    centerState = digitalRead(sensorCenter);
+    
+   if (debug) { 
+    
+    Serial.print("CenterMode ");
+    Serial.println(centerState);
+   
+   }
+
+    analogWrite(rechts, 0); 
+    analogWrite(links, 0); 
+
+      
+      while ( digitalRead(sensorCenter) == 1){
+                
+                if (dir == "L" ) {
+                  analogWrite(links, 200); 
+                   
+                } 
+                
+                if (dir == "R") {
+                  analogWrite(rechts, 200); 
+                }
+                
+                if (debug){Serial.println("try to get center");Serial.print(sensorCenter);}
+    
+            digitalWrite(ledPin1, HIGH); 
+ 
+      }
+  
+
+   
+   digitalWrite(ledPin1, LOW); 
+   analogWrite(links, 0);  
+    analogWrite(rechts, 0);  
+   
+   delay(200);
+   durchlauf = 0;
+   //Mode = 0;
+   
+   
+}
 
 void rotateR( int Rpos) {
      
@@ -195,13 +239,6 @@ int randomMove2() {
 }
 
 
-
-
-
-
-
-
-
 int rcMove() {
 
     int sensorValue = pulseIn(sensorRC,HIGH);
@@ -258,51 +295,7 @@ int rcMove() {
   
 }
 
-int center(String dir) {
-    /// Fuert den Dome in die Ausgangsposition //
 
-    centerState = digitalRead(sensorCenter);
-    
-   if (debug) { 
-    
-    Serial.print("CenterMode ");
-    Serial.println(centerState);
-   
-   }
-
-    analogWrite(rechts, 0); 
-    analogWrite(links, 0); 
-
-      
-      while ( digitalRead(sensorCenter) == 1){
-                
-                if (dir == "L" ) {
-                  analogWrite(links, 200); 
-                   
-                } 
-                
-                if (dir == "R") {
-                  analogWrite(rechts, 200); 
-                }
-                
-                if (debug){Serial.println("try to get center");Serial.print(sensorCenter);}
-    
-            digitalWrite(ledPin1, HIGH); 
- 
-      }
-  
-
-   
-   digitalWrite(ledPin1, LOW); 
-   analogWrite(links, 0);  
-    analogWrite(rechts, 0);  
-   
-   delay(200);
-   durchlauf = 0;
-   //Mode = 0;
-   
-   
-}
 
 
 void FindRoTime(){
