@@ -32,151 +32,12 @@ int Mode = 2;// 0=RandMove // 1=RCMove  //2=Service
 
 int centerState = 0;
 
-const int ledPin1 =  21;  
-const int ledPin2 =  20;  
+int ledPin1 =  21;  
+int ledPin2 =  20;  
 
 int ledState = LOW; 
 
 
-
-
-
-
-void ProzessComando() {
-
-    if (data == "test" )
-      {   
-        Serial.println("test gefunden");
-        FindRoTime();
-
-        
-      }
-
-    if (data == "try dome"){
-        Serial.println("Testprogramm");
-     
-        rotateR(Rpos*180); 
-    }
-    
-    
-    if (data == "debug on")
-      {
-        Serial.println("Debug Mode ON");
-        debug = true;      
-      }
-
-    if (data == "debug off")
-      {
-        Serial.println("Debug Mode off");
-        debug = false;
-      }
-    if (data == "vers")   
-      {
-        Serial.println("----Versionnsnummer-----");
-        Serial.println(VERSION);
-        Serial.println("### Komandoreferenz ###");
-        Serial.println("debug on");
-        Serial.println("debug off");
-        Serial.println("test");
-        Serial.println("vers");
-        Serial.println("try dome");
-        Serial.println("mode1");
-        Serial.println("mode0");
-        Serial.println("usb");
-        Serial.println("tool1");
-        Serial.println("tool2");
-        Serial.println("tool3");
-        Serial.println("nono");
-        Serial.println("yea");
-        Serial.println("dance");
-        Serial.println("center");
-      }
-
-    if (data == "mode1")
-      {
-        Serial.println("Mode = 1 RC");
-        Mode = 1;
-      }
-
-
-    if (data == "mode0")
-      {
-        Serial.println("Mode 0 Random");
-        Mode = 0;
-      }
-
-     if (data == "mode3")
-      {
-        Serial.println("Mode 0 Random");
-        Mode = 3;
-      }
- 
-
-    if (data == "usb")
-      {
-        Serial.println("Rotation zu Position USB");
-       
-        rotateR(Rpos*80);    
-      }
-
-    if (data == "tool1")
-    {
-      Serial.println("Rotation zu Position tool1");
-        
-        rotateR(Rpos*110); 
-    }
-    
-    if (data == "tool2")
-    {
-      Serial.println("Rotation zu Position tool2");
-        
-        rotateR(Rpos*140); 
-    }
-
-    if (data == "tool3")
-    {
-      Serial.println("Rotation zu Position tool3");
-       
-        rotateR(4000); 
-    }  
-
-    
-    
-    if (data == "nono")
-    {
-      Serial.println("Rotation nono");
-       
-        nono();
-        
-    }
-    
-    if (data == "yea")
-    {
-      Serial.println("Rotation yea");
-
-       
-        rotateR(2000); 
-        rotateL(100);
-        
-    }
-
-    if (data =="dance") {
-      
-    }
-
-    if (data =="center") {
-      
-      center("L");
-    }
-
-    
-      
-    //delay(2000);
-    data = "";
-    Serial.flush();
-    
- 
-}
 
 void rotateR( int Rpos) {
      
@@ -331,6 +192,149 @@ int randomMove2() {
       Serial.println(durchlauf);
   }
   
+}
+
+
+
+
+
+
+
+
+void ProzessComando() {
+
+    if (data == "test" )
+      {   
+        Serial.println("test gefunden");
+        //FindRoTime();
+
+        
+      }
+
+    if (data == "try dome"){
+        Serial.println("Testprogramm");
+     
+        rotateR(Rpos*180); 
+    }
+    
+    
+    if (data == "debug on")
+      {
+        Serial.println("Debug Mode ON");
+        debug = true;      
+      }
+
+    if (data == "debug off")
+      {
+        Serial.println("Debug Mode off");
+        debug = false;
+      }
+    if (data == "vers")   
+      {
+        Serial.println("----Versionnsnummer-----");
+        Serial.println(VERSION);
+        Serial.println("### Komandoreferenz ###");
+        Serial.println("debug on");
+        Serial.println("debug off");
+        Serial.println("test");
+        Serial.println("vers");
+        Serial.println("try dome");
+        Serial.println("mode1");
+        Serial.println("mode0");
+        Serial.println("usb");
+        Serial.println("tool1");
+        Serial.println("tool2");
+        Serial.println("tool3");
+        Serial.println("nono");
+        Serial.println("yea");
+        Serial.println("dance");
+        Serial.println("center");
+      }
+
+    if (data == "mode1")
+      {
+        Serial.println("Mode = 1 RC");
+        Mode = 1;
+      }
+
+
+    if (data == "mode0")
+      {
+        Serial.println("Mode 0 Random");
+        Mode = 0;
+      }
+
+     if (data == "mode3")
+      {
+        Serial.println("Mode 0 Random");
+        Mode = 3;
+      }
+ 
+
+    if (data == "usb")
+      {
+        Serial.println("Rotation zu Position USB");
+       
+        rotateR(Rpos*80);    
+      }
+
+    if (data == "tool1")
+    {
+      Serial.println("Rotation zu Position tool1");
+        
+        rotateR(Rpos*110); 
+    }
+    
+    if (data == "tool2")
+    {
+      Serial.println("Rotation zu Position tool2");
+        
+        rotateR(Rpos*140); 
+    }
+
+    if (data == "tool3")
+    {
+      Serial.println("Rotation zu Position tool3");
+       
+        rotateR(4000); 
+    }  
+
+    
+    
+    if (data == "nono")
+    {
+      Serial.println("Rotation nono");
+       
+        nono();
+        
+    }
+    
+    if (data == "yea")
+    {
+      Serial.println("Rotation yea");
+
+       
+        rotateR(2000); 
+        rotateL(100);
+        
+    }
+
+    if (data =="dance") {
+      
+    }
+
+    if (data =="center") {
+      
+      center("L");
+    }
+
+    
+      
+    //delay(2000);
+    data = "";
+    Serial.flush();
+    
+ 
 }
 
 ////
