@@ -64,9 +64,12 @@ void center(String dir) {
                   analogWrite(rechts, 200); 
                 }
                 
+          centerState = digitalRead(sensorCenter);
+          if (centerState == 0) {break;}
+          
                 if (debug){Serial.println("try to get center");Serial.print(sensorCenter);}
     
-            digitalWrite(ledPin1, HIGH); 
+            //digitalWrite(ledPin1, HIGH); 
  
       }
   
@@ -74,7 +77,7 @@ void center(String dir) {
    
    digitalWrite(ledPin1, LOW); 
    analogWrite(links, 0);  
-    analogWrite(rechts, 0);  
+   analogWrite(rechts, 0);  
    
    delay(200);
    durchlauf = 0;
