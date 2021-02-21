@@ -4,7 +4,7 @@ Control rotation and position via RC, Serial or just a select button to select i
 I use a custom Board (Gerber File in Prototype Status)
 and a L298 H-Bridge
 
-https://www.gooagle.com/search?q=l298+h+bridge
+https://www.google.com/search?q=l298+h+bridge
 
 next is a simple sensor for the center position
 
